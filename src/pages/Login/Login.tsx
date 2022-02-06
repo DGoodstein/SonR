@@ -8,15 +8,9 @@ import "./Login.scss";
 const Login = () => {
     const context = useContext(UserContext);
 
-    const handleLogin = () => {
-        const loginState = makeId(32);
-        context.dispatch({type: "SET_LOGIN_STATE", data: loginState});
-        login(loginState);
-    };
-
     return (
         <div>
-            <Button variant="contained" color="primary" onClick={handleLogin}>Log in with Spotify</Button>
+            SPLASH FOR LOGIN
         </div>
     );
 }

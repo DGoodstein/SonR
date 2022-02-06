@@ -1,11 +1,18 @@
 import React, { createContext, Dispatch, useEffect, useReducer } from "react";
+import { SpotifyAuth } from "../service/auth.service";
 
 type appContextState = {
-    loginState: string | undefined
+    loggedIn: boolean,
+    loginState: string,
+    loginVerifier: string,
+    spotifyAuth: SpotifyAuth
 }
 
 const initialContextState: appContextState = sessionStorage.getItem("state") ? JSON.parse(sessionStorage.getItem("state")!) as appContextState : {
-    loginState: "NEW"
+    loggedIn: false,
+    loginState: "",
+    loginVerifier: "",
+    spotifyAuth: new SpotifyAuth("", "", "0", "")
 }
 
 const UserContext = createContext<{state: appContextState, dispatch: Dispatch<{type: any, data?: any}>}> ({
@@ -16,8 +23,16 @@ const UserContext = createContext<{state: appContextState, dispatch: Dispatch<{t
 const userContextReducer = (state = initialContextState, action: { type: any, data?: any}) => {
     switch(action.type) {
         case "SET_LOGIN_STATE": {
-            console.log("state", action.data);
             return {...state, loginState: action.data};
+        }
+        case "SET_LOGIN_VERIFIER": {
+            return {...state, loginVerifier: action.data};
+        }
+        case "SET_SPOTIFY_AUTH": {
+            return {...state, spotifyAuth: action.data, loggedIn: true};
+        }
+        case "LOGOUT": {
+            return {...state, loggedIn: false, loginState: "", loginVerifier: "", spotifyAuth: new SpotifyAuth("", "", "0", "")};
         }
         default: {
             throw new Error(`Unhandled action: ${action.type}`)
